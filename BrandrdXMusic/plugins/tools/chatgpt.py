@@ -1,10 +1,9 @@
 import requests
-import random
 from BrandrdXMusic import app
-import time
-from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters
+from pyrogram.enums import ChatAction, ParseMode
 from MukeshAPI import api
+import time
 
 # YouTube API Key (Directly in chatgpt.py)
 YOUTUBE_API_KEY = "AIzaSyBzGflkz5ieSID9DiDsc-bDrQrbSxbDsAA"  # Replace with your key
@@ -21,11 +20,13 @@ async def enable_autoplay(bot, message):
     autoplay_enabled = True
     await message.reply_text(f"✅ **Autoplay has been enabled.**")
 
-    # If autoplay enabled & at least 1 song played, fetch next
+    # If autoplay is enabled and at least 1 song has been played, start autoplay
     if last_played_songs:
         next_song = fetch_next_track(last_played_songs[-1])  # Last played song se fetch karo
         await bot.send_message(message.chat.id, f"🎵 Now playing: {next_song}")
         update_song_history(next_song)
+
+        # Here, add code to play the next song in VC
 
 @app.on_message(filters.command(["stopautoplay"], prefixes=[".", "J", "j", "s", "", "/"]))
 async def disable_autoplay(bot, message):
@@ -48,6 +49,8 @@ async def play_music(bot, message):
         await bot.send_message(message.chat.id, f"🎵 Now playing: {next_song}")
         update_song_history(next_song)
 
+        # Add code here to play the next song in VC
+
 def update_song_history(song):
     """Maintain last 5 played songs"""
     last_played_songs.append(song)
@@ -59,7 +62,7 @@ def fetch_next_track(last_song):
     params = {
         "part": "snippet",
         "maxResults": 1,
-        "q": f"{last_song} song",
+        "q": f"{last_song} song",  # Adjust query as needed
         "type": "video",
         "key": YOUTUBE_API_KEY
     }
